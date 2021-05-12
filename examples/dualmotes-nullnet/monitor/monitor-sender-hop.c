@@ -186,6 +186,8 @@ PROCESS_THREAD(monitor_sender_process, ev, data)
 {
     static struct etimer periodic;
 	static struct etimer sendtimer;
+    static struct etimer sendhoptimer;
+    
 	//linkaddr_t local_addr = {{ 0x00, 0x12, 0x4b, 0x00, 0x18, 0x00, 0x01, 0x11 }};
 	//linkaddr_set_node_addr(&local_addr);
 	
@@ -224,6 +226,8 @@ PROCESS_THREAD(monitor_sender_process, ev, data)
 			}*/
 		}
     }
+
+    etimer_set(&sendhoptimer, )
 
     PROCESS_END();
 }
