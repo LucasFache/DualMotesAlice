@@ -297,8 +297,8 @@ route_callback(int event, const uip_ipaddr_t *route, const uip_ipaddr_t *ipaddr,
 PROCESS_THREAD(observed_receiver_node_process, ev, data)
 {
   static struct etimer et;
-  static struct etimer sendtimer;
-  static struct etimer periodic;
+  //static struct etimer sendtimer;
+  //static struct etimer periodic;
 
 #if RPL_WITH_STORING
   static struct uip_ds6_notification n;
