@@ -141,7 +141,8 @@ clear_GPIOS(void)
 	GPIO_CLR_PIN(GPIO_D_BASE,GPIO_PIN_MASK(2));		//GPIO PD2
 }
 /*---------------------------------------------------------------------------*/
-/*#if ENERGEST_CONF_ON
+/*
+#if ENERGEST_CONF_ON
 static void
 send_energest()
 {
@@ -172,7 +173,7 @@ send_energest()
   prev_energest_vals.listen = energest_type_time(ENERGEST_TYPE_LISTEN);
   prev_energest_vals.totaltime = RTIMER_NOW();
 }
-#endif /* ENERGEST_CONF_ON */
+#endif */ /* ENERGEST_CONF_ON */
 
 /*---------------------------------------------------------------------------*/
 static void

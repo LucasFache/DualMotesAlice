@@ -328,14 +328,6 @@ PROCESS_THREAD(observed_receiver_node_process, ev, data)
   while(1) {
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
     etimer_reset(&et);
-#if RPL_WITH_STORING
-    if(should_blink) {
-      leds_on(LEDS_ALL);
-      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
-      etimer_reset(&et);
-      leds_off(LEDS_ALL);
-    }
-#endif /* #if RPL_WITH_STORING */
   }
   PROCESS_END();
 }
