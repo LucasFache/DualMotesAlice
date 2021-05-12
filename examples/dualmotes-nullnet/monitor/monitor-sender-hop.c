@@ -219,15 +219,13 @@ PROCESS_THREAD(monitor_sender_process, ev, data)
 				ADCResult += ADC_val;
 				etimer_reset(&periodic);	
 			}
-			/*
+			
 			if(data == &sendtimer){
 				send_packet();
 				etimer_reset(&sendtimer);
-			}*/
+			}
 		}
     }
-
-    etimer_set(&sendhoptimer, )
 
     PROCESS_END();
 }

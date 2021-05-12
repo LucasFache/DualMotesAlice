@@ -73,7 +73,7 @@ receiver(struct simple_udp_connection *c,
          const uint8_t *data,
          uint16_t datalen)
 {
-  printf("Receiver called");
+  
   if(datalen == sizeof(struct energestmsg)) {
         //rtimer_clock_t rtime = RTIMER_NOW();        //received time (for the latency)
         struct energestmsg msg;

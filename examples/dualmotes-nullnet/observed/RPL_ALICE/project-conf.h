@@ -1,7 +1,7 @@
 #ifndef PROJECT_CONF_H_
 #define PROJECT_CONF_H_
 
-#define LOG_LEVEL_CONF_MAC LOG_LEVEL_DBG
+#define LOG_LEVEL_CONF_RPL LOG_LEVEL_DBG
 
 #include "stdint.h"
 
@@ -15,8 +15,6 @@
 #define BC 0 // Broadcast test or not
 
 #define IO_WIDTH 11
-
-#define TCPIP_CONF_ANNOTATE_TRANSMISSIONS 0
 
 // UART pins are used for parallel communication, serial comm over UART overwrites some pins
 #define UART_CONF_ENABLE 1

@@ -29,7 +29,6 @@
 
 
 #include "contiki.h"
-#include "lib/random.h"
 #include "sys/ctimer.h"
 #include "sys/etimer.h"
 #include "net/ipv6/uip.h"
@@ -40,7 +39,6 @@
 
 //imported
 #include "project-conf.h"
-#include "sys/etimer.h"
 #include "sys/rtimer.h"
 #include "sys/energest.h"
 #include "dev/gpio.h"
@@ -55,15 +53,14 @@
 
 #define UDP_PORT 1234
 
-#define SEND_INTERVAL		(60 * CLOCK_SECOND)
-#define SEND_TIME		(random_rand() % (SEND_INTERVAL))
+#define SEND_INTERVAL		(1 * CLOCK_SECOND)
 
 //imported
-const linkaddr_t transm_addr = {{ 0x00, 0x12, 0x4b, 0x00, 0x19, 0x32, 0xe4, 0x84 }}; //0x00, 0x12, 0x4b, 0x00, 0x18, 0xe6, 0x9b, 0xcf 
-const linkaddr_t recv_addr = {{ 0x00, 0x12, 0x4b, 0x00, 0x19, 0x32, 0xe5, 0xc5 }}; //0x00, 0x12, 0x4b, 0x00, 0x19, 0x32, 0xe4, 0xcc
-#if ENERGEST_CONF_ON
-const linkaddr_t energest_addr = {{ 0x00, 0x12, 0x4b, 0x00, 0x19, 0x32, 0xe5, 0xc5 }}; //0x00, 0x12, 0x4b, 0x00, 0x14, 0xd5, 0x2d, 0xe1
-#endif
+//const linkaddr_t transm_addr = {{ 0x00, 0x12, 0x4b, 0x00, 0x19, 0x32, 0xe4, 0x84 }}; //0x00, 0x12, 0x4b, 0x00, 0x18, 0xe6, 0x9b, 0xcf 
+//const linkaddr_t recv_addr = {{ 0x00, 0x12, 0x4b, 0x00, 0x19, 0x32, 0xe5, 0xc5 }}; //0x00, 0x12, 0x4b, 0x00, 0x19, 0x32, 0xe4, 0xcc
+//#if ENERGEST_CONF_ON
+//const linkaddr_t energest_addr = {{ 0x00, 0x12, 0x4b, 0x00, 0x19, 0x32, 0xe5, 0xc5 }}; //0x00, 0x12, 0x4b, 0x00, 0x14, 0xd5, 0x2d, 0xe1
+//#endif
 
 uint16_t seqno=0;
 struct energestmsg prev_energest_vals;
@@ -233,6 +230,7 @@ send_packet()
 	}		//least significant bit in seqno_bits[0]
 
   struct energestmsg energest_values;
+  struct energestmsg buf;
 
   energest_values.totaltime = RTIMER_NOW() - prev_energest_vals.totaltime;
 
@@ -266,11 +264,6 @@ send_packet()
 		state = 0;
 	}
 
-  LOG_INFO("DATA sent to ");
-	LOG_INFO_LLADDR(&recv_addr);
-  LOG_INFO_("\n");
-
-
   //vanaf hier vragen zie ook send_packet
   default_prefix = uip_ds6_default_prefix();
   uip_ip6addr_copy(&addr, default_prefix);
@@ -280,18 +273,18 @@ send_packet()
   addr.u16[6] = UIP_HTONS(0x1932);
   addr.u16[7] = UIP_HTONS(0xe5c5);
 
-  {
+  
   static unsigned int message_number;
-  char buf[20];
 
   printf("Sending unicast to ");
   uip_debug_ipaddr_print(&addr);
   printf("\n");
-  sprintf(buf, "%x%x,%" PRIu16 ",%" PRIu32 ",%" PRIu32 ",%" PRIu32 ",%" PRIu32 ",%" PRIu32"\n\r", 
-  addr.u16[6],addr.u16[7],seqno, energest_values.cpu, energest_values.lpm, energest_values.transmit, energest_values.listen, energest_values.totaltime);
+  memcpy(&buf, &energest_values, sizeof(energest_values));
+  //sprintf(buf, "%x%x,%" PRIu16 ",%" PRIu32 ",%" PRIu32 ",%" PRIu32 ",%" PRIu32 ",%" PRIu32"\n\r", 
+  //addr.u16[6],addr.u16[7],seqno, energest_values.cpu, energest_values.lpm, energest_values.transmit, energest_values.listen, energest_values.totaltime);
   message_number++;
-  simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, &addr);
-  }
+  simple_udp_sendto(&unicast_connection, &buf, sizeof(buf), &addr);
+
 
   /*
   #if BC
@@ -307,7 +300,7 @@ send_packet()
   prev_energest_vals.transmit = energest_type_time(ENERGEST_TYPE_TRANSMIT);
   prev_energest_vals.listen = energest_type_time(ENERGEST_TYPE_LISTEN);
   prev_energest_vals.totaltime = RTIMER_NOW();
-
+  
   /*
   #if ENERGEST_CONF_ON
     if (seqno%ENERGEST_FREQ==0)
@@ -318,7 +311,7 @@ send_packet()
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(observed_sender_node_process, ev, data)
 {
-  static struct etimer periodic_timer;
+  //static struct etimer periodic_timer;
   static struct etimer send_timer;
 
   //imported
@@ -338,15 +331,21 @@ PROCESS_THREAD(observed_sender_node_process, ev, data)
   simple_udp_register(&unicast_connection, UDP_PORT,
                       NULL, UDP_PORT, receiver);
 
-  etimer_set(&periodic_timer, SEND_INTERVAL);
+  //etimer_set(&periodic_timer, SEND_INTERVAL);
+  etimer_set(&send_timer, SEND_INTERVAL);
   while(1) {
-
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
-    etimer_reset(&periodic_timer);
-    etimer_set(&send_timer, SEND_TIME);
-
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
-    send_packet();    
+    PROCESS_YIELD();
+    if(ev == PROCESS_EVENT_TIMER){
+      
+      if(data == &send_timer){
+        send_packet();  
+      }
+      etimer_reset(&send_timer);
+    }
+    
+    //PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
+      
+    //etimer_reset(&send_timer);
   }
 
   PROCESS_END();
