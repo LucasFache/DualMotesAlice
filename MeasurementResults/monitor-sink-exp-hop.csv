@@ -1,0 +1,7 @@
+Running serialdump without rlwrap support.
+Consider installing rlwarp in order to be able to use command history
+make -C ../../../tools/serial-io serialdump
+make[1]: Entering directory '/home/DualMotesAlice/tools/serial-io'
+cc -Wall -Werror -O2 serialdump.c tools-utils.c -o serialdump
+make[1]: Leaving directory '/home/DualMotesAlice/tools/serial-io'
+../../../tools/serial-io/serialdump -b115200 -T /dev/ttyUSB0
