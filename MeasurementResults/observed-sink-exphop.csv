@@ -1,0 +1,3 @@
+Running serialdump without rlwrap support.
+Consider installing rlwarp in order to be able to use command history
+../../../tools/serial-io/serialdump -b115200 -T /dev/ttyUSB0

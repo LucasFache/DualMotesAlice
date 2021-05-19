@@ -206,7 +206,6 @@ PROCESS_THREAD(monitor_sender_process, ev, data)
 
 		if(ev == PROCESS_EVENT_TIMER){
 			if(data == &periodic){
-
 				if(prev_io_flag != GPIO_READ_PIN(GPIO_A_BASE,GPIO_PIN_MASK(7))){
 					send_packet();
 					prev_io_flag = GPIO_READ_PIN(GPIO_A_BASE,GPIO_PIN_MASK(7));
