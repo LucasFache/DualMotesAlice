@@ -195,7 +195,6 @@ PROCESS_THREAD(monitor_sender_process, ev, data)
 
     // init ADC on A4
     adc_zoul.configure(SENSORS_HW_INIT,ZOUL_SENSORS_ADC2);
-    counter = 0;
 
     etimer_set(&periodic, ADC_READ_INTERVAL);
 	etimer_set(&sendtimer, CLOCK_SECOND);

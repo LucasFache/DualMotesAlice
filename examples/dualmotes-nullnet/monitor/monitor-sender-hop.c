@@ -194,8 +194,7 @@ PROCESS_THREAD(monitor_sender_process, ev, data)
 	NETSTACK_RADIO.set_value(RADIO_PARAM_TXPOWER, power);
 
     // init ADC on A4
-    adc_zoul.configure(SENSORS_HW_INIT,ZOUL_SENSORS_ADC2);
-    counter = 0;
+    adc_zoul.configure(SENSORS_HW_INIT, GPIO_PIN_MASK(4));
 
     etimer_set(&periodic, ADC_READ_INTERVAL);
 	etimer_set(&sendtimer, CLOCK_SECOND);
@@ -206,13 +205,10 @@ PROCESS_THREAD(monitor_sender_process, ev, data)
 
 		if(ev == PROCESS_EVENT_TIMER){
 			if(data == &periodic){
-				if(prev_io_flag != GPIO_READ_PIN(GPIO_A_BASE,GPIO_PIN_MASK(7))){
-					send_packet();
-					prev_io_flag = GPIO_READ_PIN(GPIO_A_BASE,GPIO_PIN_MASK(7));
-				}
 			
 				counter++;
-				int ADC_val = adc_zoul.value(ZOUL_SENSORS_ADC2);
+				int ADC_val = adc_zoul.value( GPIO_PIN_MASK(4));
+				printf("%d\n",ADC_val);
 				ADCResult += ADC_val;
 				etimer_reset(&periodic);	
 			}

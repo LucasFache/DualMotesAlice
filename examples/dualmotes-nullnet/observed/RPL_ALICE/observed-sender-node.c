@@ -270,8 +270,8 @@ send_packet()
 
   addr.u16[4] = UIP_HTONS(0x0212);
   addr.u16[5] = UIP_HTONS(0x4b00);
-  addr.u16[6] = UIP_HTONS(0x1932);
-  addr.u16[7] = UIP_HTONS(0xe5c5);
+  addr.u16[6] = UIP_HTONS(0x18e6);
+  addr.u16[7] = UIP_HTONS(0x9d78);
 
   
   static unsigned int message_number;
