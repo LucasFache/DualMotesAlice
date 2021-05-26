@@ -270,8 +270,8 @@ send_packet()
 
   addr.u16[4] = UIP_HTONS(0x0212);
   addr.u16[5] = UIP_HTONS(0x4b00);
-  addr.u16[6] = UIP_HTONS(0x18e6);
-  addr.u16[7] = UIP_HTONS(0x9d78);
+  addr.u16[6] = UIP_HTONS(0x18ec);
+  addr.u16[7] = UIP_HTONS(0x28d6);
 
   
   static unsigned int message_number;
@@ -339,8 +339,9 @@ PROCESS_THREAD(observed_sender_node_process, ev, data)
       
       if(data == &send_timer){
         send_packet();  
+        etimer_reset(&send_timer);
       }
-      etimer_reset(&send_timer);
+      
     }
     
     //PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
