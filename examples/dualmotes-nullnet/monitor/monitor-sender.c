@@ -73,7 +73,7 @@ struct testmsg {
     uint32_t energy;
     uint16_t counter_ADC;
     rtimer_clock_t timestamp_app;
-    rtimer_clock_t timestamp_mac;
+    uint32_t timestamp_mac;
 };
 
 /* 
@@ -91,7 +91,7 @@ uint8_t   flag;
 uint8_t power = 31;
 
 linkaddr_t sink_addr = {{ 0x00, 0x12, 0x4b, 0x00, 0x19, 0x32, 0xe5, 0x8c }}; //0x00, 0x12, 0x4b, 0x00, 0x14, 0xd5, 0x2d, 0xc8
-//linkaddr_t sink_addr = {{ 0x00, 0x12, 0x4b, 0x00, 0x18, 0xe6, 0x9c, 0x47 }};
+//linkaddr_t sink_addr = {{ 0x00, 0x12, 0x4b, 0x00, 0x18, 0xe6, 0x9c, 0xa2 }};
 
 //static void send_packet(gpio_hal_pin_mask_t pin_mask);
 
@@ -179,6 +179,7 @@ send_packet()
     ADCResult=0;
     counter=0;
 	NETSTACK_RADIO.get_object(RADIO_PARAM_LAST_PACKET_TIMESTAMP, &msg.timestamp_mac, sizeof(rtimer_clock_t));
+	printf("msg.Timestamp: %lu \n",msg.timestamp_mac);
 }
 /*---------------------------------------------------------------------------*/
 int prev_io_flag = 0;
@@ -216,11 +217,11 @@ PROCESS_THREAD(monitor_sender_process, ev, data)
 				ADCResult += ADC_val;
 				etimer_reset(&periodic);	
 			}
-			/*
+			
 			if(data == &sendtimer){
 				send_packet();
 				etimer_reset(&sendtimer);
-			}*/
+			}
 		}
     }
 

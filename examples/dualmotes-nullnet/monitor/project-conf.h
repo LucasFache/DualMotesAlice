@@ -5,11 +5,16 @@
 #include "sys/rtimer.h"
 
 //Already defined in other file: ../../../arch/platform/zoul/./contiki-conf.h:117:0
-#undef ZOUL_CONF_USE_CC1200_RADIO
-#define ZOUL_CONF_USE_CC1200_RADIO 1
+//#undef ZOUL_CONF_USE_CC1200_RADIO
+//#define ZOUL_CONF_USE_CC1200_RADIO 1
+
+//#include "cc2538-def.h"
+//Define radio driver
+//#undef NETSTACK_CONF_RADIO
+//#define NETSTACK_CONF_RADIO cc1200_driver
 
 #undef IEEE802154_CONF_DEFAULT_CHANNEL
-#define IEEE802154_CONF_DEFAULT_CHANNEL 13
+#define IEEE802154_CONF_DEFAULT_CHANNEL 20
 
 //only for root node
 #define TCPIP_CONF_ANNOTATE_TRANSMISSIONS 1

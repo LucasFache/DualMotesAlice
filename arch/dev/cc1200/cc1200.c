@@ -1860,7 +1860,7 @@ idle(void)
 
   uint8_t s;
 
-  DISABLE_GPIO_INTERRUPTS();
+  //DISABLE_GPIO_INTERRUPTS();
 
   TX_LEDS_OFF();
   RX_LEDS_OFF();

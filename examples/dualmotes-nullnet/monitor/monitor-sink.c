@@ -48,6 +48,7 @@ struct testmsg {
     uint16_t counter_ADC;
     rtimer_clock_t timestamp_app;
     rtimer_clock_t timestamp_mac;
+    char padding[80];
 };
 
 /* Log configuration */
